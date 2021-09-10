@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "OneInTheFlipperCharacter.generated.h"
 
+class AThrowingWeapon;
 UCLASS(config=Game)
 class AOneInTheFlipperCharacter : public ACharacter
 {
@@ -29,8 +30,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AThrowingWeapon> ThrowingWeaponBlueprint;
+
 protected:
 
+	void ThrowWeapon();
+	
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();
 

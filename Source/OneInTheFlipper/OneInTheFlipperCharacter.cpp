@@ -2,6 +2,7 @@
 
 #include "OneInTheFlipperCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "ThrowingWeapon.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -74,8 +75,20 @@ void AOneInTheFlipperCharacter::SetupPlayerInputComponent(class UInputComponent*
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AOneInTheFlipperCharacter::OnResetVR);
+
+	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AOneInTheFlipperCharacter::ThrowWeapon);
 }
 
+
+void AOneInTheFlipperCharacter::ThrowWeapon()
+{
+	// Get a location above the player
+	const FVector SpawnLocation{ this->GetActorLocation()+ FVector{ 0.f, 0.f , 150.f } };
+	const FRotator SpawnRotation = GetActorRotation();
+	
+	AThrowingWeapon* pThrowingWeapon = GetWorld()->SpawnActor<AThrowingWeapon>(ThrowingWeaponBlueprint.Get(), SpawnLocation, SpawnRotation, FActorSpawnParameters{});
+	pThrowingWeapon->Throw(FollowCamera->GetForwardVector());
+}
 
 void AOneInTheFlipperCharacter::OnResetVR()
 {
@@ -90,12 +103,12 @@ void AOneInTheFlipperCharacter::OnResetVR()
 
 void AOneInTheFlipperCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
-		Jump();
+	Jump();
 }
 
 void AOneInTheFlipperCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
-		StopJumping();
+	StopJumping();
 }
 
 void AOneInTheFlipperCharacter::TurnAtRate(float Rate)
@@ -126,12 +139,12 @@ void AOneInTheFlipperCharacter::MoveForward(float Value)
 
 void AOneInTheFlipperCharacter::MoveRight(float Value)
 {
-	if ( (Controller != nullptr) && (Value != 0.0f) )
+	if ((Controller != nullptr) && (Value != 0.0f))
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
+
 		// get right vector 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction

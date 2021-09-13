@@ -2,6 +2,7 @@
 
 
 #include "ThrowingWeapon.h"
+#include "OneInTheFlipperCharacter.h"
 
 // Sets default values
 AThrowingWeapon::AThrowingWeapon()
@@ -66,6 +67,12 @@ void AThrowingWeapon::OnStaticMeshComponentHit(UPrimitiveComponent* HitComponent
 	UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	WeaponState = FWeaponState::Ragdoll;
+
+	//if (auto enemyCharacter = dynamic_cast<AOneInTheFlipperCharacter*>(OtherActor))
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Hit an enemy"));
+	//}
+	
 	//UE_LOG(LogTemp, Warning, TEXT("Weapon hit: %s"), *OtherActor->GetName());
 }
 
